@@ -1,6 +1,3 @@
 [submodule "backgammon-logic"]
 	path = backgammon-logic
 	url = git@github.com:ehegnes/backgammon-logic.git
-[submodule "backgammon-server"]
-	path = backgammon-server
-	url = git@github.com:ehegnes/backgammon-server.git
