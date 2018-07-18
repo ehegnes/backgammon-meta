@@ -35,6 +35,9 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - backgammon-server
+    default-extensions:  ForeignFunctionInterface
+    extra-lib-dirs:      ../backgammon-logic/target/debug
+    extra-libraries:     backgammon_logic
 
 tests:
   backgammon-server-test:
