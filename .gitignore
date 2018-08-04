@@ -1,3 +1,5 @@
 server/.stack-work/
 server/backgammon-server.cabal
 server/*~
+*.o
+*.hi
