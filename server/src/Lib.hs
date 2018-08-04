@@ -1,6 +1,5 @@
-module Lib
-    ( someFunc
-    ) where
+module Lib where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import Foreign.C.Types
+
+foreign import ccall unsafe "rust_test_ffi" rust_test_ffi :: CInt -> IO CInt
