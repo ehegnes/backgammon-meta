@@ -2,9 +2,9 @@ name:                backgammon-server
 version:             0.1.0.0
 github:              "ehegnes/backgammon-server"
 license:             GPL-3.0
-author:              "Eric Hegnes"
-maintainer:          "eric.hegnes@gmail.com"
-copyright:           "2018 Eric Hegnes"
+author:              "Eric Hegnes <eric.hegnes@gmail.com>, Charly Resendiz <cbresendiz1@gmail.com"
+maintainer:          "Eric Hegnes <eric.hegnes@gmail.com>"
+copyright:           "2018 Eric Hegnes, Charly Resendiz"
 
 extra-source-files:
 - README.md
