@@ -1,20 +1,16 @@
 Backgammon
 ==========
 
-This aims to be a mostly-functional implemnetation of backgammon using Rust and
-Haskell, complete with a web client. Much of the logic is adapted from
-[gnubg](http://www.gnubg.org/).
+This project aims to provide a web-based backgammon game. The server is to be
+in [Haskell](https://www.haskell.org/). The client is to use
+[Elm](http://elm-lang.org/). All logic is to be contained in a
+[Rust](https://www.rust-lang.org/) library and used via Foreign Function
+Interfaces.
 
-## Logic & Design
-### Board Representation
-The board is a 2-by-25-index list of integers, corresponding to the bar (index 0)
-and the points (indicies 1 to 24, inclusive). The 2-index dimensionality
-corresponds to each respective player.
-
-### API & Server
-- Use JSON serialization to normalize data
-- Server checks moves as they are attempted and reports to the appropriate player
-- Server ensures synchronized boards between clients
+# Server
+- Use a module to declare types that will be shared with the client
 
 ## Resources
 - [Backgammon Glossary](http://www.bkgm.com/glossary.html)
+- [`gnubg`](https://savannah.gnu.org/cvs/?group=gnubg)
+- [`mmakowski/backgammon-model`](https://github.com/mmakowski/backgammon-model)
