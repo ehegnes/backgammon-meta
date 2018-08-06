@@ -7,13 +7,13 @@ module Types
 
 import Servant.API
 
-newtype Board = Board [Int]
+newtype Board = Board [Int]-- Board (Arr Point Int)
 
 data Player = White | Black
 
 data Game = Game {
     board :: Board,
-    dice :: (Int, Int),
-    turn :: Player,
-    rng :: Int
+    dice  :: (Int, Int),
+    turn  :: Player,
+    rng   :: Int
 }
