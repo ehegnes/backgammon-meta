@@ -3,5 +3,8 @@ all: build run
 run:
 	stack exec backgammon-server-exe
 
-build:
+build: backgammon-logic
 	stack build
+
+backgammon-logic:
+	cargo build --manifest-path=backgammon-logic-wrapper/Cargo.toml

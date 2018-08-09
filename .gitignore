@@ -1,5 +1,8 @@
-server/.stack-work/
-server/backgammon-server.cabal
-server/*~
-*.o
 *.hi
+*.o
+server/*~
+server/.stack-work/
+server/backgammon-logic-wrapper/**/*.rs.bk
+server/backgammon-logic-wrapper/Cargo.lock
+server/backgammon-logic-wrapper/target
+server/backgammon-server.cabal

@@ -1,7 +1,4 @@
-all: backgammon-logic backgammon-server
-
-backgammon-logic:
-	cargo build --manifest-path=backgammon-logic/Cargo.toml
+all: backgammon-server
 
 backgammon-server:
 	make -C server

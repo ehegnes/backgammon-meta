@@ -1,0 +1,14 @@
+[package]
+name = "backgammon-logic-wrapper"
+version = "0.1.0"
+authors = ["Eric Hegnes <eric.hegnes@gmail.com>"]
+
+[lib]
+name = "backgammon_logic"
+crate-type = ["staticlib"]
+
+[dependencies]
+backgammon-logic = { path = "../backgammon-logic" }
+
+[build-dependencies]
+cbindgen = "0.6.1"
