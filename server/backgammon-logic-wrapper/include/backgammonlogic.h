@@ -13,7 +13,6 @@
 #include <stdbool.h>
 
 #define PLAYER_BLACK 0
-
 #define PLAYER_WHITE 1
 
 typedef enum {
@@ -27,5 +26,17 @@ typedef struct {
     Die d1;
     Die d2;
 } RustDice;
+
+typedef struct {
+    RustPlayer owner;
+    uint8_t count;
+} RustPoint;
+
+typedef RustPoint *RustMaybePoint;
+
+RustMaybePoint init_some_point(void) ;
+RustMaybePoint init_none_point(void) ;
+RustPlayer *init_player(void) ;
+RustPoint *init_point(void) ;
 
 #endif /* BACKGAMMON_LOGIC_H */

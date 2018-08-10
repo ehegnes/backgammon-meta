@@ -1,5 +1,8 @@
+import Types
 import Lib
 
 main = do
-    {-let x = init_player-}
-    print "hello"
+  print =<< peekPlayer =<< init_player
+  print =<< peekPoint =<< init_point
+  print =<< peekMaybePoint =<< init_some_point
+  print =<< peekMaybePoint =<< init_none_point

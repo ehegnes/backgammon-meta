@@ -9,6 +9,3 @@ crate-type = ["staticlib"]
 
 [dependencies]
 backgammon-logic = { path = "../backgammon-logic" }
-
-[build-dependencies]
-cbindgen = "0.6.1"

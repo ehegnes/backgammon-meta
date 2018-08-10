@@ -9,13 +9,19 @@ style = "Type"
 
 [parse]
 parse_deps = true
-include = []
+include = ["backgammon_logic"]
 exclude = []
 clean = true
 
 [export]
-include = ["RustPlayer", "Die", "RustDice"]
-exclude = []
+include = [
+  "Die",
+  "RustDice",
+  "RustMaybePoint",
+  "RustPlayer",
+  "RustPoint",
+]
+exclude = ["_RustMaybePoint"]
 prefix = ""
 item_types = ["constants", "globals", "enums", "structs", "unions", "typedefs", "opaque", "functions"]
 

@@ -8,3 +8,6 @@ build: backgammon-logic
 
 backgammon-logic:
 	cargo build --manifest-path=backgammon-logic-wrapper/Cargo.toml
+
+clean:
+	stack clean

@@ -1,18 +1,58 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
 module Types where
 
 #include "backgammonlogic.h"
 
-import Foreign.C.String
-import Control.Applicative
+import Data.Typeable
 import Foreign.C.Types
+import Foreign.Marshal.Utils (maybePeek)
+import Foreign.Ptr
+import Foreign.Storable
+import Control.Monad (liftM)
 
-{#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord) #}
+{#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord, Show) #}
 
-type Die = {#type Die#}
+instance Storable Player where
+  sizeOf    _ = sizeOf    (undefined :: CInt)
+  alignment _ = alignment (undefined :: CInt)
+  peek p      = liftM cToEnum $ peek (castPtr p :: Ptr CInt)
+  poke p v    = poke (castPtr p :: Ptr CInt) (cFromEnum v)
 
-newtype Dice = Dice {#type RustDice#}
+cToEnum :: (Integral i, Enum e) => i -> e
+cToEnum  = toEnum . fromIntegral
 
-getD1 = {#get RustDice->d1#}
-getD2 = {#get RustDice->d2#}
+cFromEnum :: (Enum e, Integral i) => e -> i
+cFromEnum = fromIntegral . fromEnum
 
-getDice  = (getD1, getD2)
+peekPlayer :: Ptr Player -> IO Player
+peekPlayer = peek
+
+type Die = {#type Die #}
+
+newtype Dice = Dice {#type RustDice #}
+
+data Point = Point
+  { owner :: Player
+  , count :: Int
+  } deriving (Eq, Show, Typeable)
+
+instance Storable Point where
+  sizeOf _ = {#sizeof RustPoint #}
+  alignment _ = 4
+  peek p = Point
+    <$> liftM cToEnum      ({#get RustPoint->owner #} p)
+    <*> liftM fromIntegral ({#get RustPoint->count #} p)
+  poke p x = do
+    {#set RustPoint.owner #} p (cFromEnum $ owner x)
+    {#set RustPoint.count #} p (fromIntegral $ count x)
+
+peekPoint :: Ptr Point -> IO Point
+peekPoint p = do
+  owner <- {#get RustPoint->owner #} p
+  count <- {#get RustPoint->count #} p
+  return $ Point (cToEnum owner) (fromIntegral count)
+
+{#pointer *RustPoint as MaybePoint -> Point #}
+peekMaybePoint :: MaybePoint -> IO (Maybe Point)
+peekMaybePoint = maybePeek peekPoint
