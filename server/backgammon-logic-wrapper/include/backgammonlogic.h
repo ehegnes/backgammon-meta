@@ -14,6 +14,7 @@
 
 #define PLAYER_BLACK 0
 #define PLAYER_WHITE 1
+#define BOARD_SIZE 24
 
 typedef enum {
     Black,
@@ -34,9 +35,13 @@ typedef struct {
 
 typedef RustPoint *RustMaybePoint;
 
-RustMaybePoint init_some_point(void) ;
-RustMaybePoint init_none_point(void) ;
-RustPlayer *init_player(void) ;
-RustPoint *init_point(void) ;
+typedef RustMaybePoint **RustInternalBoard;
+
+RustMaybePoint init_some_point(void);
+RustMaybePoint init_none_point(void);
+RustPlayer *init_player(void);
+RustPoint *init_point(void);
+//RustInternalBoard init_internal_board(void);
+uint8_t init_internal_board(void);
 
 #endif /* BACKGAMMON_LOGIC_H */

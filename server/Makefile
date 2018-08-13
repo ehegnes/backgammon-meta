@@ -1,4 +1,4 @@
-all: build run
+all: clean build run
 
 run:
 	stack exec backgammon-server-exe
@@ -11,3 +11,4 @@ backgammon-logic:
 
 clean:
 	stack clean
+

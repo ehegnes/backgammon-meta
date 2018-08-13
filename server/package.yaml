@@ -22,9 +22,9 @@ executables:
     other-extensions: ForeignFunctionInterface
     build-tools:      c2hs
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+    - -g
+    - -dcore-lint
+    - -debug
     cc-options:
     - -D_BITS_FLOATN_H
     extra-libraries:  backgammon_logic

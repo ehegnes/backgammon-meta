@@ -7,9 +7,11 @@ module Types where
 import Data.Typeable
 import Foreign.C.Types
 import Foreign.Marshal.Utils (maybePeek)
+import Foreign.Marshal.Array
 import Foreign.Ptr
 import Foreign.Storable
 import Control.Monad (liftM)
+import Data.Maybe
 
 {#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord, Show) #}
 
@@ -56,3 +58,18 @@ peekPoint p = do
 {#pointer *RustPoint as MaybePoint -> Point #}
 peekMaybePoint :: MaybePoint -> IO (Maybe Point)
 peekMaybePoint = maybePeek peekPoint
+
+data InternalBoard = InternalBoard [Maybe Point]
+  deriving (Eq, Show, Typeable)
+
+instance Storable InternalBoard where
+  sizeOf _ = {#sizeof RustInternalBoard #}
+  alignment _ = {#alignof RustInternalBoard #}
+  peek p = do
+    maybePoints <- peekArray 24 $ castPtr p
+    points <- sequence $ fmap peekMaybePoint maybePoints
+    return $ InternalBoard points
+  poke p = undefined
+
+peekInternalBoard :: Ptr InternalBoard -> IO InternalBoard
+peekInternalBoard = peek . castPtr
