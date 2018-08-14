@@ -15,29 +15,36 @@ description:         Please see the README on GitHub at <https://github.com/eheg
 dependencies:
 - base >= 4.7 && < 5
 
+library:
+  source-dirs:      src
+  other-extensions: ForeignFunctionInterface
+  build-tools:      c2hs
+  cc-options:       -D_BITS_FLOATN_H
+  extra-libraries:  backgammon_logic
+
 executables:
   backgammon-server-exe:
-    main:             Main.hs
-    source-dirs:      app
-    other-extensions: ForeignFunctionInterface
-    build-tools:      c2hs
-    ghc-options:
-    - -g
-    - -dcore-lint
-    - -debug
-    cc-options:
-    - -D_BITS_FLOATN_H
-    extra-libraries:  backgammon_logic
-    extra-lib-dirs:
-    - backgammon-logic-wrapper/target/debug
-    include-dirs: backgammon-logic-wrapper/include
-
-
-tests:
-  backgammon-server-test:
-    main:        Spec.hs
-    source-dirs: test
+    main:        Main.hs
+    source-dirs: app
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -g
+    - -dcore-lint
+    - -debug
+    dependencies:
+    - backgammon-server
+
+tests:
+  backgammon-server-test:
+    main:             Spec.hs
+    source-dirs:      test
+    other-extensions: ForeignFunctionInterface
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - backgammon-server
+    - hspec

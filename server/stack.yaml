@@ -52,14 +52,15 @@ packages:
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default
 # require-stack-version: ">=1.7"
+require-stack-version: ">=1.7.1"
 #
 # Override the architecture used by stack, especially useful on Windows
 # arch: i386
 # arch: x86_64
 #
 # Extra directories used by stack for building
-# extra-include-dirs: [/path/to/dir]
-# extra-lib-dirs: [/path/to/dir]
+extra-include-dirs: [ backgammon-logic-wrapper/include ]
+extra-lib-dirs:     [ backgammon-logic-wrapper/target/debug ]
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor

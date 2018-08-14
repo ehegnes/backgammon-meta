@@ -1,14 +1,18 @@
-all: clean build run
+.PHONY: all test clean
+
+all: build test run
 
 run:
 	stack exec backgammon-server-exe
 
-build: backgammon-logic
+build: backgammon-logic-wrapper
 	stack build
 
-backgammon-logic:
+backgammon-logic-wrapper:
 	cargo build --manifest-path=backgammon-logic-wrapper/Cargo.toml
+
+test:
+	stack test
 
 clean:
 	stack clean
-

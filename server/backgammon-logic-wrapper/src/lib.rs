@@ -91,29 +91,29 @@ impl From<InternalBoard> for RustInternalBoard {
 }
 
 #[no_mangle]
-pub extern fn init_player() -> Box<RustPlayer> {
+pub extern fn test_player() -> Box<RustPlayer> {
     Box::new(RustPlayer::Black)
 }
 
 #[no_mangle]
-pub extern fn init_point() -> Box<RustPoint> {
+pub extern fn test_point() -> Box<RustPoint> {
     Box::new(RustPoint { owner: RustPlayer::White, count: 5 })
 }
 
 #[no_mangle]
-pub extern fn init_some_point() -> RustMaybePoint {
+pub extern fn test_some_point() -> RustMaybePoint {
     let point = Some(Point { owner: Player::Black, count: 2 });
     RustMaybePoint::from(point)
 }
 
 #[no_mangle]
-pub extern fn init_none_point() -> RustMaybePoint {
+pub extern fn test_none_point() -> RustMaybePoint {
     let point = None;
     RustMaybePoint::from(point)
 }
 
 #[no_mangle]
-pub extern fn init_internal_board() -> Box<RustInternalBoard> {
+pub extern fn test_internal_board() -> Box<RustInternalBoard> {
     let player = Player::Black;
     Box::new(RustInternalBoard::from(Board::init().board(player)))
 }

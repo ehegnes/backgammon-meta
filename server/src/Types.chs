@@ -5,13 +5,12 @@ module Types where
 #include "backgammonlogic.h"
 
 import Data.Typeable
-import Foreign.C.Types
+import Foreign.C.Types (CInt)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Marshal.Array
-import Foreign.Ptr
+import Foreign.Ptr (Ptr, castPtr)
 import Foreign.Storable
 import Control.Monad (liftM)
-import Data.Maybe
 
 {#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord, Show) #}
 
