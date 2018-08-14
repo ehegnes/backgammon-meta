@@ -91,6 +91,11 @@ impl From<InternalBoard> for RustInternalBoard {
 }
 
 #[no_mangle]
+pub extern fn test_dice() -> Box<RustDice> {
+    Box::new(RustDice::from((2, 6)))
+}
+
+#[no_mangle]
 pub extern fn test_player() -> Box<RustPlayer> {
     Box::new(RustPlayer::Black)
 }

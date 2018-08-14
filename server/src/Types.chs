@@ -11,6 +11,7 @@ import Foreign.Marshal.Array
 import Foreign.Ptr (Ptr, castPtr)
 import Foreign.Storable
 import Control.Monad (liftM)
+import Data.Word (Word8)
 
 {#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord, Show) #}
 
@@ -31,7 +32,20 @@ peekPlayer = peek
 
 type Die = {#type Die #}
 
-newtype Dice = Dice {#type RustDice #}
+data Dice = Dice (Die, Die)
+  deriving (Eq, Show, Typeable)
+
+instance Storable Dice where
+  sizeOf _ = {#sizeof RustDice #}
+  alignment _ = {#alignof RustDice #}
+  peek p = do
+    d1 <- {#get RustDice->d1 #} p
+    d2 <- {#get RustDice->d2 #} p
+    return $ Dice (fromIntegral d1 :: Die, fromIntegral d2 :: Die)
+  poke = undefined
+
+peekDice :: Ptr Dice -> IO Dice
+peekDice = peek
 
 data Point = Point
   { owner :: Player

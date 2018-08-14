@@ -9,6 +9,11 @@ main = hspec spec
 
 spec :: Spec
 spec = do
+  describe "Dice" $ do
+    it "can be marshalled" $ do
+      dice <- peekDice =<< test_dice
+      dice `shouldBe` Dice (2, 6)
+
   describe "Player" $ do
     it "can be marshalled" $ do
       player <- peekPlayer =<< test_player
