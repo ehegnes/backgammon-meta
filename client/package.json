@@ -1,0 +1,21 @@
+{
+  "name": "backgammon-client",
+  "version": "1.0.0",
+  "license": "GPLv3",
+  "private": true,
+  "scripts": {
+    "serve": "elm-live src/Main.elm",
+    "lint": "elm-format src"
+  },
+  "devDependencies": {
+    "elm": "^0.18.0",
+    "elm-format": "^0.6.1-alpha",
+    "elm-live": "^2.7.5",
+    "husky": "^0.14.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint"
+    }
+  }
+}
