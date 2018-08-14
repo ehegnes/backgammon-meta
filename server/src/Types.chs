@@ -54,7 +54,7 @@ data Point = Point
 
 instance Storable Point where
   sizeOf _ = {#sizeof RustPoint #}
-  alignment _ = 4
+  alignment _ = {#alignof RustPoint #}
   peek p = Point
     <$> liftM cToEnum      ({#get RustPoint->owner #} p)
     <*> liftM fromIntegral ({#get RustPoint->count #} p)
@@ -86,3 +86,26 @@ instance Storable InternalBoard where
 
 peekInternalBoard :: Ptr InternalBoard -> IO InternalBoard
 peekInternalBoard = peek . castPtr
+
+data Board = Board
+  { board :: InternalBoard
+  , barBlack :: Int
+  , barWhite :: Int
+  } deriving (Eq, Show, Typeable)
+
+instance Storable Board where
+  sizeOf _ = {#sizeof RustBoard #}
+  alignment _ = {#alignof RustBoard #}
+  peek p = do
+    -- TODO:  don't duplicate this array peeking code
+    -- FIXME: `maybePoints` probably only resolves properly without a getter
+    --        because `InternalBoard` is first in the struct
+    maybePoints <- peekArray 24 $ castPtr p
+    board <- InternalBoard <$> (sequence (peekMaybePoint <$> maybePoints))
+    barBlack <- fromIntegral <$> {#get RustBoard->bar_black #} p
+    barWhite <- fromIntegral <$> {#get RustBoard->bar_white #} p
+    return $ Board (board) barBlack barWhite
+  poke = undefined
+
+peekBoard :: Ptr Board -> IO Board
+peekBoard = peek . castPtr

@@ -4,6 +4,36 @@ import Test.Hspec
 import Lib
 import Types
 
+initial_internal_board = InternalBoard
+  [ Just (Point Black 2)
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Just (Point White 5)
+  , Nothing
+  , Just (Point White 3)
+  , Nothing
+  , Nothing
+  , Nothing
+  , Just (Point Black 5)
+  , Just (Point White 5)
+  , Nothing
+  , Nothing
+  , Nothing
+  , Just (Point Black 3)
+  , Nothing
+  , Just (Point Black 5)
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Just (Point White 2)
+  ]
+
+initial_board = Board initial_internal_board 0 0
+
+
 main :: IO ()
 main = hspec spec
 
@@ -35,29 +65,9 @@ spec = do
   describe "InternalBoard" $ do
     it "can be marshalled" $ do
       board <- peekInternalBoard =<< test_internal_board
-      board `shouldBe` InternalBoard
-        [ Just (Point Black 2)
-        , Nothing
-        , Nothing
-        , Nothing
-        , Nothing
-        , Just (Point White 5)
-        , Nothing
-        , Just (Point White 3)
-        , Nothing
-        , Nothing
-        , Nothing
-        , Just (Point Black 5)
-        , Just (Point White 5)
-        , Nothing
-        , Nothing
-        , Nothing
-        , Just (Point Black 3)
-        , Nothing
-        , Just (Point Black 5)
-        , Nothing
-        , Nothing
-        , Nothing
-        , Nothing
-        , Just (Point White 2)
-        ]
+      board `shouldBe` initial_internal_board
+
+  describe "Board" $ do
+    it "can be marshalled" $ do
+      board <- peekBoard =<< test_board
+      board `shouldBe` initial_board

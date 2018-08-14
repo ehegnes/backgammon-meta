@@ -90,6 +90,24 @@ impl From<InternalBoard> for RustInternalBoard {
     }
 }
 
+#[repr(C)]
+#[derive(Clone)]
+pub struct RustBoard {
+    board: RustInternalBoard,
+    bar_black: u8,
+    bar_white: u8,
+}
+
+impl From<Board> for RustBoard {
+    fn from(board: Board) -> Self {
+        RustBoard {
+            board: RustInternalBoard::from(board.board),
+            bar_black: board.bar_black,
+            bar_white: board.bar_white,
+        }
+    }
+}
+
 #[no_mangle]
 pub extern fn test_dice() -> Box<RustDice> {
     Box::new(RustDice::from((2, 6)))
@@ -121,4 +139,9 @@ pub extern fn test_none_point() -> RustMaybePoint {
 pub extern fn test_internal_board() -> Box<RustInternalBoard> {
     let player = Player::Black;
     Box::new(RustInternalBoard::from(Board::init().board(player)))
+}
+
+#[no_mangle]
+pub extern fn test_board() -> Box<RustBoard> {
+    Box::new(RustBoard::from(Board::init()))
 }
