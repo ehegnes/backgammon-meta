@@ -21,6 +21,8 @@ library:
   build-tools:      c2hs
   cc-options:       -D_BITS_FLOATN_H
   extra-libraries:  backgammon_logic
+  dependencies:
+  - aeson
 
 executables:
   backgammon-server-exe:
@@ -35,6 +37,9 @@ executables:
     - -debug
     dependencies:
     - backgammon-server
+    - aeson
+    - servant-server
+    - warp
 
 tests:
   backgammon-server-test:

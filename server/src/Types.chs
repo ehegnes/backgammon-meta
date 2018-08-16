@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Types where
 
@@ -12,8 +13,12 @@ import Foreign.Ptr (Ptr, castPtr)
 import Foreign.Storable
 import Control.Monad (liftM)
 import Data.Word (Word8)
+import Data.Aeson (ToJSON)
+import GHC.Generics
 
-{#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord, Show) #}
+{#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord, Show, Typeable, Generic) #}
+
+instance ToJSON Player
 
 instance Storable Player where
   sizeOf    _ = sizeOf    (undefined :: CInt)
@@ -50,7 +55,9 @@ peekDice = peek
 data Point = Point
   { owner :: Player
   , count :: Int
-  } deriving (Eq, Show, Typeable)
+  } deriving (Eq, Show, Typeable, Generic)
+
+instance ToJSON Point
 
 instance Storable Point where
   sizeOf _ = {#sizeof RustPoint #}
@@ -73,7 +80,9 @@ peekMaybePoint :: MaybePoint -> IO (Maybe Point)
 peekMaybePoint = maybePeek peekPoint
 
 data InternalBoard = InternalBoard [Maybe Point]
-  deriving (Eq, Show, Typeable)
+  deriving (Eq, Show, Typeable, Generic)
+
+instance ToJSON InternalBoard
 
 instance Storable InternalBoard where
   sizeOf _ = {#sizeof RustInternalBoard #}
@@ -91,7 +100,9 @@ data Board = Board
   { board :: InternalBoard
   , barBlack :: Int
   , barWhite :: Int
-  } deriving (Eq, Show, Typeable)
+  } deriving (Eq, Show, Typeable, Generic)
+
+instance ToJSON Board
 
 instance Storable Board where
   sizeOf _ = {#sizeof RustBoard #}

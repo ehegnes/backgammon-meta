@@ -2,7 +2,7 @@
 
 all: build test run
 
-run:
+run: build
 	stack exec backgammon-server-exe
 
 build: backgammon-logic-wrapper
@@ -16,3 +16,6 @@ test:
 
 clean:
 	stack clean
+
+todo:
+	grep -nEIr --color=always --exclude-dir='.*' --exclude=Makefile 'XXX|TODO|BUG|FIXME'

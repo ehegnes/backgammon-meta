@@ -35,6 +35,11 @@ resolver: lts-12.1
 #  - wai
 packages:
 - .
+## XXX: https://github.com/jystic/unix-compat/pull/40
+- location:
+    git: https://github.com/QuLogic/unix-compat.git
+    commit: 94ae4ee75d75ea02956288d01c3b2d66d8e2606e
+  extra-dep: true
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
@@ -64,3 +69,4 @@ extra-lib-dirs:     [ backgammon-logic-wrapper/target/debug ]
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+#
