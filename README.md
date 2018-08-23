@@ -16,4 +16,3 @@ Interfaces.
 ## Resources
 - [Backgammon Glossary](http://www.bkgm.com/glossary.html)
 - [`gnubg`](https://savannah.gnu.org/cvs/?group=gnubg)
-- [`mmakowski/backgammon-model`](https://github.com/mmakowski/backgammon-model)
