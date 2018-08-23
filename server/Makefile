@@ -1,12 +1,15 @@
 .PHONY: all test clean
 
-all: build test run
+all: build test
 
 run: build
 	stack exec backgammon-server-exe
 
 build: backgammon-logic-wrapper
 	stack build
+
+generate-types:
+	stack exec generate-types
 
 backgammon-logic-wrapper:
 	cargo build --manifest-path=backgammon-logic-wrapper/Cargo.toml

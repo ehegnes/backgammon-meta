@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Types where
 
@@ -79,8 +80,9 @@ peekPoint p = do
 peekMaybePoint :: MaybePoint -> IO (Maybe Point)
 peekMaybePoint = maybePeek peekPoint
 
-data InternalBoard = InternalBoard [Maybe Point]
-  deriving (Eq, Show, Typeable, Generic)
+data InternalBoard = InternalBoard
+  { internalBoard :: [Maybe Point]
+  } deriving (Eq, Show, Typeable, Generic)
 
 instance ToJSON InternalBoard
 

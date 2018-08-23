@@ -1,49 +1,53 @@
-module Model exposing (defBoard, model)
+module Model
+    exposing
+        ( Model
+        , model
+        , initial_board
+        )
 
 import Types exposing (..)
+import GeneratedTypes exposing (..)
 
 
-genBoard : BGSize -> List Sect
-genBoard B18 =
-    buildBoard 18 18
+-- TODO: use board from API
 
 
-buildBoard : Int -> Int -> List Sect
-buildBoard n maxr =
-    case n of
-        0 ->
-            []
+initial_internal_board =
+    InternalBoard
+        [ Just (Point Black 2)
+        , Nothing
+        , Nothing
+        , Nothing
+        , Nothing
+        , Just (Point White 5)
+        , Nothing
+        , Just (Point White 3)
+        , Nothing
+        , Nothing
+        , Nothing
+        , Just (Point Black 5)
+        , Just (Point White 5)
+        , Nothing
+        , Nothing
+        , Nothing
+        , Just (Point Black 3)
+        , Nothing
+        , Just (Point Black 5)
+        , Nothing
+        , Nothing
+        , Nothing
+        , Nothing
+        , Just (Point White 2)
+        ]
 
-        n ->
-            let
-                col =
-                    case (n % 2) of
-                        0 ->
-                            Red
 
-                        _ ->
-                            Black
-            in
-                let
-                    elt =
-                        Pos (maxr - (n - 1)) col Not NoPiece
-                in
-                    let
-                        pos =
-                            elt
-                    in
-                        pos :: buildBoard (n - 1) maxr
+initial_board =
+    Board initial_internal_board 0 0
 
 
-defBoard : List Sect
-defBoard =
-    genBoard B18
-
+type alias Model =
+  { board : Board
+  }
 
 model : Model
-model =
-    { board = defBoard
-    , result = Nei
-    , turn = P0
-    , valid = [ ( 5, 6 ) ]
-    }
+model = { board = initial_board }

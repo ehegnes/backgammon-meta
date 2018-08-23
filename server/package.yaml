@@ -41,6 +41,15 @@ executables:
     - servant-server
     - warp
 
+  generate-types:
+    main:        Main.hs
+    source-dirs: elm
+    dependencies:
+    - backgammon-server
+    - elm-export
+    - servant-elm
+    - servant
+
 tests:
   backgammon-server-test:
     main:             Spec.hs

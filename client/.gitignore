@@ -5,3 +5,7 @@ elm-stuff/
 yarn.lock
 yarn-error.log
 node_modules/
+
+# Generated files
+src/*.hsc.h
+src/*.hsi
