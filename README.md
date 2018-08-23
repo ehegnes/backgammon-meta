@@ -10,7 +10,7 @@ Interfaces.
 ## Pieces Parts
 - [Client](client)
 - [Server](server)
-- [Backgammon Logic](https://github.com/ehegnes/backgammon-logic)
+- [Backgammon Logic](https://github.com/ehegnes/backgammon-logic) [`docs`](https://ehegnes.github.io/backgammon-logic/)
 - [Backgammon Logic Wrapper](server/backgammon-logic-wrapper)
 
 ## Resources
