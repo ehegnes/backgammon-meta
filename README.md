@@ -1,5 +1,5 @@
-Backgammon
-==========
+backgammon-meta
+===============
 
 This project aims to provide a web-based backgammon game. The server is to be
 in [Haskell](https://www.haskell.org/). The client is to use
@@ -7,8 +7,10 @@ in [Haskell](https://www.haskell.org/). The client is to use
 [Rust](https://www.rust-lang.org/) library and used via Foreign Function
 Interfaces.
 
-# Server
-- Use a module to declare types that will be shared with the client
+## Pieces Parts
+- [Client](client/README.md)
+- [Server](server/README.md)
+- [Backgammon Logic](server/backgammon-logic/README.md)
 
 ## Resources
 - [Backgammon Glossary](http://www.bkgm.com/glossary.html)
