@@ -9,3 +9,4 @@ node_modules/
 # Generated files
 src/*.hsc.h
 src/*.hsi
+index.html
