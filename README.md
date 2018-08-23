@@ -8,9 +8,10 @@ in [Haskell](https://www.haskell.org/). The client is to use
 Interfaces.
 
 ## Pieces Parts
-- [Client](client/README.md)
-- [Server](server/README.md)
-- [Backgammon Logic](server/backgammon-logic/README.md)
+- [Client](client)
+- [Server](server)
+- [Backgammon Logic](https://github.com/ehegnes/backgammon-logic)
+- [Backgammon Logic Wrapper](server/backgammon-logic-wrapper)
 
 ## Resources
 - [Backgammon Glossary](http://www.bkgm.com/glossary.html)
