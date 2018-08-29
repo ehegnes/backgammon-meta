@@ -8,7 +8,7 @@ run: build
 build: backgammon-logic-wrapper
 	stack build
 
-generate-types:
+generate-types: build
 	stack exec generate-types
 
 backgammon-logic-wrapper: backgammon-logic

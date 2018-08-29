@@ -1,37 +1,23 @@
-{-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Main where
 
-import Data.Proxy
 import Types
-import Elm
-import Servant.Elm
-import Servant.API
+import Elm.Derive
+import Elm.Module
+import Data.Proxy
 
-instance ElmType Board
-instance ElmType InternalBoard
-instance ElmType Player
-instance ElmType Point
-
-type BoardAPI = "board" :> Get '[JSON] Board
-
-spec :: Spec
-spec = Spec ["GeneratedTypes"]
-  (defElmImports
-  : "import Types exposing (..)"
-  : toElmTypeSource    (Proxy :: Proxy Board)
-  : toElmDecoderSource (Proxy :: Proxy Board)
-  : toElmTypeSource    (Proxy :: Proxy InternalBoard)
-  : toElmDecoderSource (Proxy :: Proxy InternalBoard)
-  {-: toElmTypeSource    (Proxy :: Proxy Player)-}
-  {-: toElmDecoderSource (Proxy :: Proxy Player)-}
-  : toElmTypeSource    (Proxy :: Proxy Point)
-  : toElmDecoderSource (Proxy :: Proxy Point)
-  : generateElmForAPI  (Proxy :: Proxy BoardAPI)
-  )
+deriveBoth defaultOptions ''Board
+deriveBoth defaultOptions ''InternalBoard
+deriveBoth defaultOptions ''Player
+deriveBoth defaultOptions ''Point
 
 main :: IO ()
-main = specsToDir [spec] "../client/src"
+main =
+    writeFile "../client/src/Types.elm"
+    $ makeElmModule "Types"
+    [ DefineElm (Proxy :: Proxy Player)
+    , DefineElm (Proxy :: Proxy Point)
+    , DefineElm (Proxy :: Proxy Board)
+    , DefineElm (Proxy :: Proxy InternalBoard)
+    ]

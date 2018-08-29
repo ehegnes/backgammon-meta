@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
 
 module Types where
 
@@ -13,13 +12,10 @@ import Foreign.Marshal.Array
 import Foreign.Ptr (Ptr, castPtr)
 import Foreign.Storable
 import Control.Monad (liftM)
-import Data.Word (Word8)
-import Data.Aeson (ToJSON)
 import GHC.Generics
 
-{#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White} deriving (Eq, Ord, Show, Typeable, Generic) #}
-
-instance ToJSON Player
+{#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White}
+  deriving (Eq, Ord, Show, Typeable, Generic) #}
 
 instance Storable Player where
   sizeOf    _ = sizeOf    (undefined :: CInt)
@@ -58,8 +54,6 @@ data Point = Point
   , count :: Int
   } deriving (Eq, Show, Typeable, Generic)
 
-instance ToJSON Point
-
 instance Storable Point where
   sizeOf _ = {#sizeof RustPoint #}
   alignment _ = {#alignof RustPoint #}
@@ -80,11 +74,8 @@ peekPoint p = do
 peekMaybePoint :: MaybePoint -> IO (Maybe Point)
 peekMaybePoint = maybePeek peekPoint
 
-data InternalBoard = InternalBoard
-  { internalBoard :: [Maybe Point]
-  } deriving (Eq, Show, Typeable, Generic)
-
-instance ToJSON InternalBoard
+data InternalBoard = InternalBoard [Maybe Point]
+  deriving (Eq, Show, Typeable, Generic)
 
 instance Storable InternalBoard where
   sizeOf _ = {#sizeof RustInternalBoard #}
@@ -103,8 +94,6 @@ data Board = Board
   , barBlack :: Int
   , barWhite :: Int
   } deriving (Eq, Show, Typeable, Generic)
-
-instance ToJSON Board
 
 instance Storable Board where
   sizeOf _ = {#sizeof RustBoard #}

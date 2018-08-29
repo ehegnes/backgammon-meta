@@ -21,8 +21,6 @@ library:
   build-tools:      c2hs
   cc-options:       -D_BITS_FLOATN_H
   extra-libraries:  backgammon_logic
-  dependencies:
-  - aeson
 
 executables:
   backgammon-server-exe:
@@ -39,16 +37,16 @@ executables:
     - backgammon-server
     - aeson
     - servant-server
+    - wai-cors
+    - wai-extra
     - warp
 
   generate-types:
     main:        Main.hs
     source-dirs: elm
     dependencies:
+    - elm-bridge
     - backgammon-server
-    - elm-export
-    - servant-elm
-    - servant
 
 tests:
   backgammon-server-test:

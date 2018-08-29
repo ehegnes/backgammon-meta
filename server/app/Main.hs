@@ -1,5 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Main where
 
@@ -9,7 +11,14 @@ import Types
 import Control.Monad.IO.Class (liftIO)
 import Data.Aeson
 import Network.Wai.Handler.Warp (run)
+import Network.Wai.Middleware.Cors (simpleCors)
+import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Servant
+
+deriving instance ToJSON Board
+deriving instance ToJSON InternalBoard
+deriving instance ToJSON Player
+deriving instance ToJSON Point
 
 type BoardAPI = "board" :> Get '[JSON] Board
 
@@ -24,5 +33,4 @@ app = serve boardAPI server
 
 main :: IO ()
 main = do
-  print "Try `curl localhost:3000/board` in another terminal"
-  run  3000 app
+  run 3000 $ simpleCors $ logStdoutDev app

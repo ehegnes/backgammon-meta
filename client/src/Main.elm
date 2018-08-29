@@ -1,17 +1,16 @@
 module Main exposing (..)
 
-import Html exposing (beginnerProgram)
-import Msgs exposing (Msg)
-import Model exposing (Model, model)
+import Html exposing (..)
+import Model exposing (Model, init)
+import Msg exposing (Msg)
+import Subscriptions exposing (subscriptions)
 import Update exposing (update)
 import View exposing (view)
 
-
-
 main : Program Never Model Msg
-main =
-    beginnerProgram
-        { model = model
-        , view = view
-        , update = update
-        }
+main = program
+    { init = init
+    , update = update
+    , subscriptions = subscriptions
+    , view = view
+    }
