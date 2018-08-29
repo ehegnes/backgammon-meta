@@ -1,7 +1,9 @@
-all: backgammon-server backgammon-client
+.PHONY: server client
 
-backgammon-server:
-	make -C server
+all: server client
 
-backgammon-client:
+server:
+	make -C server run
+
+client:
 	make -C client

@@ -13,6 +13,12 @@ Interfaces.
 - [Backgammon Logic](https://github.com/ehegnes/backgammon-logic) [`docs`](https://ehegnes.github.io/backgammon-logic/)
 - [Backgammon Logic Wrapper](server/backgammon-logic-wrapper)
 
+## Targets
+| Target   | Description          |
+| -------- | -------------------- |
+| `server` | Build and run server |
+| `client` | Build and run client |
+
 ## Resources
 - [Backgammon Glossary](http://www.bkgm.com/glossary.html)
 - [`gnubg`](https://savannah.gnu.org/cvs/?group=gnubg)
