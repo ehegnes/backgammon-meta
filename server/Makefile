@@ -17,7 +17,7 @@ backgammon-logic-wrapper: backgammon-logic
 backgammon-logic:
 	cargo build --manifest-path=backgammon-logic/Cargo.toml
 
-test:
+test: backgammon-logic-wrapper
 	stack test
 
 clean:

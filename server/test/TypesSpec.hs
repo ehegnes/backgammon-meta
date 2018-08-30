@@ -33,10 +33,6 @@ initial_internal_board = InternalBoard
 
 initial_board = Board initial_internal_board 0 0
 
-
-main :: IO ()
-main = hspec spec
-
 spec :: Spec
 spec = do
   describe "Dice" $ do

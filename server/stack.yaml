@@ -37,8 +37,8 @@ packages:
 - .
 ## XXX: https://github.com/jystic/unix-compat/pull/40
 - location:
-    git: https://github.com/QuLogic/unix-compat.git
-    commit: 94ae4ee75d75ea02956288d01c3b2d66d8e2606e
+    git: https://github.com/jystic/unix-compat.git
+    commit: 3debd5de64aa78978d7eb24c51f2a42d16ae6827
   extra-dep: true
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
