@@ -10,14 +10,6 @@ import Msg exposing (Msg)
 import Model exposing (..)
 import List exposing (length, range, map2)
 
-
-type alias MyList =
-  { l: List Int
-  }
-
-initList : MyList
-initList = MyList [1, 2, 3, 4]
-
 view : Model -> Html Msg
 view model =
   div
