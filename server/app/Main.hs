@@ -16,7 +16,6 @@ import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Servant
 
 deriving instance ToJSON Board
-deriving instance ToJSON InternalBoard
 deriving instance ToJSON Player
 deriving instance ToJSON Point
 

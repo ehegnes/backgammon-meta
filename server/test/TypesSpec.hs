@@ -4,7 +4,7 @@ import Test.Hspec
 import Lib
 import Types
 
-initial_internal_board = InternalBoard
+initial_internal_board =
   [ Just (Point Black 2)
   , Nothing
   , Nothing
@@ -57,11 +57,6 @@ spec = do
     it "can be marshalled from `None`" $ do
       maybePoint <- peekMaybePoint =<< test_none_point
       maybePoint `shouldBe` Nothing
-
-  describe "InternalBoard" $ do
-    it "can be marshalled" $ do
-      board <- peekInternalBoard =<< test_internal_board
-      board `shouldBe` initial_internal_board
 
   describe "Board" $ do
     it "can be marshalled" $ do

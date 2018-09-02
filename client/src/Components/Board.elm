@@ -20,8 +20,9 @@ initList = MyList [1, 2, 3, 4]
 
 view : Model -> Html Msg
 view model =
-  div []
-    [ div [] (viewChequers model.board.board)
+  div
+    []
+    [ viewBoard model.board
     ]
 
 pointToColor { owner } =
@@ -31,10 +32,21 @@ pointToColor { owner } =
 
 zip = List.map2 (,)
 
--- FIXME: This should take a `Board` instead of an `InternalBoard` and be
---        renamed
-viewChequers : InternalBoard -> List (Html msg)
-viewChequers (InternalBoard b) =
+viewBoard : Board -> Html msg
+viewBoard { board } =
+  let
+      topHalf = List.take 12 board
+      bottomHalf = List.take 12 (List.drop 12 board)
+  in
+      div
+        []
+        [ div [style [("height", "64px")]] (viewHalf topHalf)
+        , div [] (viewHalf bottomHalf)
+        ]
+
+
+viewHalf : List (Maybe Point) -> List (Html msg)
+viewHalf b =
   let
       board = zip (range 0 (length b)) b
   in

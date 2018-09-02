@@ -46,14 +46,14 @@ jsonEncPoint  val =
 
 
 type alias Board  =
-   { board: InternalBoard
+   { board: (List (Maybe Point))
    , barBlack: Int
    , barWhite: Int
    }
 
 jsonDecBoard : Json.Decode.Decoder ( Board )
 jsonDecBoard =
-   ("board" := jsonDecInternalBoard) >>= \pboard ->
+   ("board" := Json.Decode.list (Json.Decode.maybe (jsonDecPoint))) >>= \pboard ->
    ("barBlack" := Json.Decode.int) >>= \pbarBlack ->
    ("barWhite" := Json.Decode.int) >>= \pbarWhite ->
    Json.Decode.succeed {board = pboard, barBlack = pbarBlack, barWhite = pbarWhite}
@@ -61,22 +61,8 @@ jsonDecBoard =
 jsonEncBoard : Board -> Value
 jsonEncBoard  val =
    Json.Encode.object
-   [ ("board", jsonEncInternalBoard val.board)
+   [ ("board", (Json.Encode.list << List.map (maybeEncode (jsonEncPoint))) val.board)
    , ("barBlack", Json.Encode.int val.barBlack)
    , ("barWhite", Json.Encode.int val.barWhite)
    ]
-
-
-
-type InternalBoard  =
-    InternalBoard (List (Maybe Point))
-
-jsonDecInternalBoard : Json.Decode.Decoder ( InternalBoard )
-jsonDecInternalBoard =
-    Json.Decode.lazy (\_ -> Json.Decode.map InternalBoard (Json.Decode.list (Json.Decode.maybe (jsonDecPoint))))
-
-
-jsonEncInternalBoard : InternalBoard -> Value
-jsonEncInternalBoard (InternalBoard v1) =
-    (Json.Encode.list << List.map (maybeEncode (jsonEncPoint))) v1
 

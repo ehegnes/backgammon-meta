@@ -8,7 +8,6 @@ import Elm.Module
 import Data.Proxy
 
 deriveBoth defaultOptions ''Board
-deriveBoth defaultOptions ''InternalBoard
 deriveBoth defaultOptions ''Player
 deriveBoth defaultOptions ''Point
 
@@ -19,5 +18,4 @@ main =
     [ DefineElm (Proxy :: Proxy Player)
     , DefineElm (Proxy :: Proxy Point)
     , DefineElm (Proxy :: Proxy Board)
-    , DefineElm (Proxy :: Proxy InternalBoard)
     ]

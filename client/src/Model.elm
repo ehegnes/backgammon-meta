@@ -8,32 +8,31 @@ import Types exposing (..)
 -- TODO: use board from API
 
 init_board = Board
-  (InternalBoard
-    [ Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    , Nothing
-    ])
+  [ Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  , Nothing
+  ]
   0
   0
 

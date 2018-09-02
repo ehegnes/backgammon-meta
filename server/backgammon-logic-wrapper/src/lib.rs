@@ -5,7 +5,7 @@ extern crate arrayvec;
 use backgammon_logic::player::Player;
 use backgammon_logic::game::{Dice};
 use backgammon_logic::board::{Point, MaybePoint};
-use backgammon_logic::board::{Board, InternalBoard, INITIAL_BOARD};
+use backgammon_logic::board::{Board, INITIAL_BOARD};
 
 pub use backgammon_logic::game::Die;
 pub use backgammon_logic::constants::*;
@@ -75,25 +75,9 @@ impl From<MaybePoint> for RustMaybePoint {
 }
 
 #[repr(C)]
-#[derive(Clone, Debug)]
-pub struct RustInternalBoard([RustMaybePoint; BOARD_SIZE]);
-
-impl From<InternalBoard> for RustInternalBoard {
-    fn from(internal_board: InternalBoard) -> Self {
-        let internal_board = internal_board
-            .into_iter()
-            .map(|x| RustMaybePoint::from(*x))
-            .collect::<Vec<RustMaybePoint>>();
-        let a: ArrayVec<_> = internal_board.into_iter().collect();
-        let a: [RustMaybePoint; BOARD_SIZE] = a.into_inner().unwrap();
-        RustInternalBoard(a)
-    }
-}
-
-#[repr(C)]
 #[derive(Clone)]
 pub struct RustBoard {
-    board: RustInternalBoard,
+    board: [RustMaybePoint; BOARD_SIZE],
     bar_black: u8,
     bar_white: u8,
 }
@@ -101,7 +85,15 @@ pub struct RustBoard {
 impl From<Board> for RustBoard {
     fn from(board: Board) -> Self {
         RustBoard {
-            board: RustInternalBoard::from(board.board),
+            board: {
+                let internal_board = board.board
+                    .into_iter()
+                    .map(|x| RustMaybePoint::from(*x))
+                    .collect::<Vec<RustMaybePoint>>();
+                let a: ArrayVec<_> = internal_board.into_iter().collect();
+                let a: [RustMaybePoint; BOARD_SIZE] = a.into_inner().unwrap();
+                a
+            },
             bar_black: board.bar_black,
             bar_white: board.bar_white,
         }
@@ -133,12 +125,6 @@ pub extern fn test_some_point() -> RustMaybePoint {
 pub extern fn test_none_point() -> RustMaybePoint {
     let point = None;
     RustMaybePoint::from(point)
-}
-
-#[no_mangle]
-pub extern fn test_internal_board() -> Box<RustInternalBoard> {
-    let player = Player::Black;
-    Box::new(RustInternalBoard::from(Board::init().board(player)))
 }
 
 #[no_mangle]

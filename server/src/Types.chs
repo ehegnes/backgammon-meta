@@ -74,23 +74,17 @@ peekPoint p = do
 peekMaybePoint :: MaybePoint -> IO (Maybe Point)
 peekMaybePoint = maybePeek peekPoint
 
-data InternalBoard = InternalBoard [Maybe Point]
-  deriving (Eq, Show, Typeable, Generic)
-
-instance Storable InternalBoard where
-  sizeOf _ = {#sizeof RustInternalBoard #}
-  alignment _ = {#alignof RustInternalBoard #}
-  peek p = do
-    maybePoints <- peekArray 24 $ castPtr p
-    points <- sequence $ fmap peekMaybePoint maybePoints
-    return $ InternalBoard points
-  poke p = undefined
-
-peekInternalBoard :: Ptr InternalBoard -> IO InternalBoard
-peekInternalBoard = peek . castPtr
+--instance Storable InternalBoard where
+--  sizeOf _ = {#sizeof RustInternalBoard #}
+--  alignment _ = {#alignof RustInternalBoard #}
+--  peek p = do
+--    maybePoints <- peekArray 24 $ castPtr p
+--    points <- sequence $ fmap peekMaybePoint maybePoints
+--    return $ InternalBoard points
+--  poke p = undefined
 
 data Board = Board
-  { board :: InternalBoard
+  { board :: [Maybe Point]
   , barBlack :: Int
   , barWhite :: Int
   } deriving (Eq, Show, Typeable, Generic)
@@ -99,14 +93,11 @@ instance Storable Board where
   sizeOf _ = {#sizeof RustBoard #}
   alignment _ = {#alignof RustBoard #}
   peek p = do
-    -- TODO:  don't duplicate this array peeking code
-    -- FIXME: `maybePoints` probably only resolves properly without a getter
-    --        because `InternalBoard` is first in the struct
     maybePoints <- peekArray 24 $ castPtr p
-    board <- InternalBoard <$> (sequence (peekMaybePoint <$> maybePoints))
+    board <- sequence (peekMaybePoint <$> maybePoints)
     barBlack <- fromIntegral <$> {#get RustBoard->bar_black #} p
     barWhite <- fromIntegral <$> {#get RustBoard->bar_white #} p
-    return $ Board (board) barBlack barWhite
+    return $ Board board barBlack barWhite
   poke = undefined
 
 peekBoard :: Ptr Board -> IO Board

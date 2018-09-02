@@ -40,7 +40,6 @@ RustMaybePoint test_some_point(void);
 RustMaybePoint test_none_point(void);
 RustPlayer *test_player(void);
 RustPoint *test_point(void);
-RustInternalBoard *test_internal_board(void);
 RustBoard *test_board(void);
 
 #endif /* BACKGAMMON_LOGIC_H */
