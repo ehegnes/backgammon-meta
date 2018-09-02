@@ -74,15 +74,6 @@ peekPoint p = do
 peekMaybePoint :: MaybePoint -> IO (Maybe Point)
 peekMaybePoint = maybePeek peekPoint
 
---instance Storable InternalBoard where
---  sizeOf _ = {#sizeof RustInternalBoard #}
---  alignment _ = {#alignof RustInternalBoard #}
---  peek p = do
---    maybePoints <- peekArray 24 $ castPtr p
---    points <- sequence $ fmap peekMaybePoint maybePoints
---    return $ InternalBoard points
---  poke p = undefined
-
 data Board = Board
   { board :: [Maybe Point]
   , barBlack :: Int
