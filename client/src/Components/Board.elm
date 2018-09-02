@@ -8,7 +8,7 @@ import Html.Attributes exposing (..)
 import Types exposing (..)
 import Msg exposing (Msg)
 import Model exposing (..)
-import List exposing (length, range, map2)
+import List exposing (length, range, map2, reverse, take, drop)
 
 view : Model -> Html Msg
 view model =
@@ -19,7 +19,7 @@ view model =
 
 pointToColor { owner } =
   case owner of
-    Black -> "grey"
+    Black -> "#999"
     White -> "lightblue"
 
 zip = List.map2 (,)
@@ -27,20 +27,20 @@ zip = List.map2 (,)
 viewBoard : Board -> Html msg
 viewBoard { board } =
   let
-      topHalf = List.take 12 board
-      bottomHalf = List.take 12 (List.drop 12 board)
+    topHalf = List.take 12 board
+    bottomHalf = reverse (take 12 (drop 12 board))
   in
-      div
-        []
-        [ div [style [("height", "64px")]] (viewHalf topHalf)
-        , div [] (viewHalf bottomHalf)
-        ]
+    div
+      []
+      [ div [style [("height", "64px")]] (viewHalf topHalf)
+      , div [] (viewHalf bottomHalf)
+      ]
 
 
 viewHalf : List (Maybe Point) -> List (Html msg)
 viewHalf b =
   let
-      board = zip (range 0 (length b)) b
+    board = zip (range 0 (length b)) b
   in
     List.map (\(i, maybePoint) ->
       case maybePoint of
@@ -48,15 +48,27 @@ viewHalf b =
           -- TODO: map such that each chequer is represented
           div
             [ style
-              [ ("borderRadius", "50%")
+              [ ("position", "absolute")
+              , ("marginLeft", (toString (i*32) ++ "px"))
               , ("backgroundColor", (pointToColor point))
+              , ("borderRadius", "50%")
               , ("width", "32px")
               , ("height", "32px")
+              , ("lineHeight", "32px")
+              , ("textAlign", "center")
+              ]
+            ]
+            [ text (toString point.count) ]
+        Nothing ->
+          div
+            [ style
+              [ ("position", "absolute")
               , ("marginLeft", (toString (i*32) ++ "px"))
-              , ("position", "absolute")
+              , ("borderRadius", "50%")
+              , ("border", "1px solid black")
+              , ("width", "32px")
+              , ("height", "32px")
               ]
             ]
             []
-        Nothing ->
-          div [] []
       ) board
