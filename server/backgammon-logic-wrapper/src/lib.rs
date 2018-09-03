@@ -4,11 +4,12 @@ extern crate arrayvec;
 
 use backgammon_logic::player::Player;
 use backgammon_logic::game::{Dice};
-use backgammon_logic::board::{Point, MaybePoint};
-use backgammon_logic::board::{Board, INITIAL_BOARD};
+use backgammon_logic::board::{Board, INITIAL_BOARD, Point, MaybePoint};
+use backgammon_logic::moves::{Submove};
 
 pub use backgammon_logic::game::Die;
 pub use backgammon_logic::constants::*;
+pub use backgammon_logic::board::{Position};
 
 use arrayvec::ArrayVec;
 
@@ -44,6 +45,47 @@ impl From<Dice> for RustDice {
         RustDice {
             d1: dice.0,
             d2: dice.1,
+        }
+    }
+}
+
+#[repr(C)]
+#[derive(Debug, Clone)]
+pub struct BearOff {
+    from: Position,
+}
+
+#[repr(C)]
+#[derive(Debug, Clone)]
+pub struct Enter {
+    to: Position,
+}
+
+#[repr(C)]
+#[derive(Debug, Clone)]
+pub struct Move {
+    from: Position,
+    to: Position,
+}
+
+#[repr(C)]
+#[derive(Debug, Clone)]
+/// `Box<T> is required here because we can't pass structs by-value to Haskell`
+pub enum RustSubmove {
+    BearOff(Box<BearOff>),
+    Enter(Box<Enter>),
+    Move(Box<Move>),
+}
+
+impl From<Submove> for RustSubmove {
+    fn from(submove: Submove) -> Self {
+        match submove {
+            Submove::BearOff { from } =>
+                RustSubmove::BearOff(Box::new(BearOff { from })),
+            Submove::Enter { to } =>
+                RustSubmove::Enter(Box::new(Enter { to })),
+            Submove::Move { from, to } =>
+                RustSubmove::Move(Box::new(Move { from, to })),
         }
     }
 }
@@ -130,4 +172,19 @@ pub extern fn test_none_point() -> RustMaybePoint {
 #[no_mangle]
 pub extern fn test_board() -> Box<RustBoard> {
     Box::new(RustBoard::from(Board::init()))
+}
+
+#[no_mangle]
+pub extern fn test_submove_bear_off() -> Box<RustSubmove> {
+    Box::new(RustSubmove::from(Submove::BearOff { from: 1 }))
+}
+
+#[no_mangle]
+pub extern fn test_submove_enter() -> Box<RustSubmove> {
+    Box::new(RustSubmove::from(Submove::Enter { to: 1 }))
+}
+
+#[no_mangle]
+pub extern fn test_submove_move() -> Box<RustSubmove> {
+    Box::new(RustSubmove::from(Submove::Move { from: 1, to: 2 }))
 }

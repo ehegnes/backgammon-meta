@@ -21,6 +21,10 @@ library:
   build-tools:      c2hs
   cc-options:       -D_BITS_FLOATN_H
   extra-libraries:  backgammon_logic
+  ghc-options:
+  - -g2
+  - -dcore-lint
+  - -debug
 
 executables:
   backgammon-server-exe:
@@ -30,7 +34,7 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
-    - -g
+    - -g2
     - -dcore-lint
     - -debug
     dependencies:
@@ -57,6 +61,9 @@ tests:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -g2
+    - -dcore-lint
+    - -debug
     dependencies:
     - backgammon-server
     - hspec

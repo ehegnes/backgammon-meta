@@ -2,7 +2,7 @@ backgammon-meta's server
 ========================
 
 ## Building
-| Target           | Description                                                                                           |
+| Target           | Description                                                         |
 | ---------------- | ------------------------------------------------------------------- |
 | `all`            | `build` and `test`                                                  |
 | `build`          | Generate `backgammon_logic.a` for FFI and build the server          |
@@ -11,3 +11,5 @@ backgammon-meta's server
 | `generate-types` | Generate `elm` types for use in the client                          |
 | `clean`          | `stack clean` and `cargo clean`     `                               |
 | `todo`           | `grep` for certain comment predicates that indicate work to be done |
+| `gdb-exe`        | Run `gdb` on a non-stripped `backgammon-server-exe` target          |
+| `gdb-test`       | Run `gdb` on a non-stripped `backgammon-server-test` target         |

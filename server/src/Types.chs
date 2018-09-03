@@ -14,8 +14,10 @@ import Foreign.Storable
 import Control.Monad (liftM)
 import GHC.Generics
 
-{#enum define Player {PLAYER_BLACK as Black, PLAYER_WHITE as White}
-  deriving (Eq, Ord, Show, Typeable, Generic) #}
+{#enum define Player
+  { PLAYER_BLACK as Black
+  , PLAYER_WHITE as White
+  } deriving (Eq, Ord, Show, Typeable, Generic) #}
 
 instance Storable Player where
   sizeOf    _ = sizeOf    (undefined :: CInt)
@@ -65,10 +67,11 @@ instance Storable Point where
     {#set RustPoint.count #} p (fromIntegral $ count x)
 
 peekPoint :: Ptr Point -> IO Point
-peekPoint p = do
-  owner <- {#get RustPoint->owner #} p
-  count <- {#get RustPoint->count #} p
-  return $ Point (cToEnum owner) (fromIntegral count)
+peekPoint = peek . castPtr
+--peekPoint p = do
+--  owner <- {#get RustPoint->owner #} p
+--  count <- {#get RustPoint->count #} p
+--  return $ Point (cToEnum owner) (fromIntegral count)
 
 {#pointer *RustPoint as MaybePoint -> Point #}
 peekMaybePoint :: MaybePoint -> IO (Maybe Point)
@@ -93,3 +96,37 @@ instance Storable Board where
 
 peekBoard :: Ptr Board -> IO Board
 peekBoard = peek . castPtr
+
+{#enum define SubmoveTag
+  { SUBMOVE_BEAR_OFF as TagBearOff
+  , SUBMOVE_ENTER as TagEnter
+  , SUBMOVE_MOVE as TagMove
+  } deriving (Eq, Ord, Show, Typeable, Generic) #}
+
+data Submove
+  = BearOff Int
+  | Enter Int
+  | Move Int Int
+  deriving (Eq, Show, Typeable, Generic)
+
+instance Storable Submove where
+  sizeOf _ = {#sizeof RustSubmovePayload #}
+  alignment _ = {#alignof RustSubmovePayload #}
+  peek p = do
+    tag <- liftM cToEnum $ {#get RustSubmove->tag #} p :: IO SubmoveTag
+    payload <- {#get RustSubmove->payload #} p
+    case tag of
+      TagBearOff -> do
+        from <- fromIntegral <$> {#get RustSubmoveBearOff.from #} payload
+        return $ BearOff from
+      TagEnter -> do
+        to <- fromIntegral <$> {#get RustSubmoveEnter.to #} payload
+        return $ Enter to
+      TagMove -> do
+        from <- fromIntegral <$> {#get RustSubmoveMove.from #} payload
+        to <- fromIntegral <$> {#get RustSubmoveMove.to #} payload
+        return $ Move from to
+  poke = undefined
+
+peekSubmove :: Ptr Submove -> IO Submove
+peekSubmove = peek . castPtr

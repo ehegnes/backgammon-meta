@@ -62,3 +62,14 @@ spec = do
     it "can be marshalled" $ do
       board <- peekBoard =<< test_board
       board `shouldBe` initial_board
+
+  describe "Submove" $ do
+    it "can be marshalled from `Submove::BearOff`" $ do
+      submove <- peekSubmove =<< test_submove_bear_off
+      submove `shouldBe` BearOff 1
+    it "can be marshalled from `Submove::Enter`" $ do
+      submove <- peekSubmove =<< test_submove_enter
+      submove `shouldBe` Enter 1
+    it "can be marshalled from `Submove::Move`" $ do
+      submove <- peekSubmove =<< test_submove_move
+      submove `shouldBe` Move 1 2
