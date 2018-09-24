@@ -10,6 +10,8 @@ import Data.Proxy
 deriveBoth defaultOptions ''Board
 deriveBoth defaultOptions ''Player
 deriveBoth defaultOptions ''Point
+deriveBoth defaultOptions ''Submove
+deriveBoth defaultOptions ''Move
 
 main :: IO ()
 main =
@@ -18,4 +20,6 @@ main =
     [ DefineElm (Proxy :: Proxy Player)
     , DefineElm (Proxy :: Proxy Point)
     , DefineElm (Proxy :: Proxy Board)
+    , DefineElm (Proxy :: Proxy Submove)
+    , DefineElm (Proxy :: Proxy Move)
     ]

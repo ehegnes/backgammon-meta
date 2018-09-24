@@ -18,6 +18,8 @@ import Servant
 deriving instance ToJSON Board
 deriving instance ToJSON Player
 deriving instance ToJSON Point
+deriving instance ToJSON Submove
+deriving instance ToJSON Move
 
 type BoardAPI = "board" :> Get '[JSON] Board
 
