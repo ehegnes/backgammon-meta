@@ -71,6 +71,10 @@ typedef struct {
     uint8_t bar_white;
 } RustBoard;
 
+typedef struct {
+    RustSubmove **submoves;
+} RustMove;
+
 RustMaybePoint test_some_point(void);
 RustMaybePoint test_none_point(void);
 RustPlayer *test_player(void);
@@ -79,5 +83,6 @@ RustBoard *test_board(void);
 RustSubmove *test_submove_bear_off(void);
 RustSubmove *test_submove_enter(void);
 RustSubmove *test_submove_move(void);
+RustMove *test_move(void);
 
 #endif /* BACKGAMMON_LOGIC_H */

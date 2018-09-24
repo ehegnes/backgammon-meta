@@ -9,7 +9,7 @@ import Data.Typeable
 import Foreign.C.Types (CInt)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Marshal.Array
-import Foreign.Ptr (Ptr, castPtr)
+import Foreign.Ptr (Ptr, castPtr, nullPtr)
 import Foreign.Storable
 import Control.Monad (liftM)
 import GHC.Generics
@@ -104,9 +104,9 @@ peekBoard = peek . castPtr
   } deriving (Eq, Ord, Show, Typeable, Generic) #}
 
 data Submove
-  = BearOff Int
-  | Enter Int
-  | Move Int Int
+  = SubmoveBearOff Int
+  | SubmoveEnter Int
+  | SubmoveMove Int Int
   deriving (Eq, Show, Typeable, Generic)
 
 instance Storable Submove where
@@ -118,15 +118,30 @@ instance Storable Submove where
     case tag of
       TagBearOff -> do
         from <- fromIntegral <$> {#get RustSubmoveBearOff.from #} payload
-        return $ BearOff from
+        return $ SubmoveBearOff from
       TagEnter -> do
         to <- fromIntegral <$> {#get RustSubmoveEnter.to #} payload
-        return $ Enter to
+        return $ SubmoveEnter to
       TagMove -> do
         from <- fromIntegral <$> {#get RustSubmoveMove.from #} payload
         to <- fromIntegral <$> {#get RustSubmoveMove.to #} payload
-        return $ Move from to
+        return $ SubmoveMove from to
   poke = undefined
 
 peekSubmove :: Ptr Submove -> IO Submove
 peekSubmove = peek . castPtr
+
+data Move = Move [Submove]
+  deriving (Eq, Show, Typeable, Generic)
+
+instance Storable Move where
+  sizeOf _ = {#sizeof RustMove #}
+  alignment _ = {#alignof RustMove #}
+  peek p = do
+    submoves <- peekArray0 nullPtr $ castPtr p :: IO [Ptr Submove]
+    moves <- sequence (peekSubmove <$> submoves)
+    return $ Move moves
+  poke = undefined
+
+peekMove :: Ptr Move -> IO Move
+peekMove = peek . castPtr

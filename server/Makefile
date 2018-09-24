@@ -29,7 +29,7 @@ todo:
 	grep -nEIr --color=always --exclude-dir='.*' --exclude=Makefile 'XXX|TODO|BUG|FIXME'
 
 gdb-test: backgammon-logic-wrapper
-	-stack test --no-strip
+	-RUST_BACKTRACE=1 stack test --no-strip
 	gdb --args .stack-work/dist/*/*/build/backgammon-server-test/backgammon-server-test +RTS -V0
 
 gdb-exe: backgammon-logic-wrapper

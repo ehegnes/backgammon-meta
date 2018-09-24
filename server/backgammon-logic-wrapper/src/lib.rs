@@ -5,7 +5,7 @@ extern crate arrayvec;
 use backgammon_logic::player::Player;
 use backgammon_logic::game::{Dice};
 use backgammon_logic::board::{Board, INITIAL_BOARD, Point, MaybePoint};
-use backgammon_logic::moves::{Submove};
+use backgammon_logic::moves::{Move, Submove};
 
 pub use backgammon_logic::game::Die;
 pub use backgammon_logic::constants::*;
@@ -14,6 +14,8 @@ pub use backgammon_logic::board::{Position};
 use arrayvec::ArrayVec;
 
 use std::convert::From;
+use std::str::FromStr;
+use std::os::raw::c_void;
 
 pub const PLAYER_BLACK: u8 = 0;
 pub const PLAYER_WHITE: u8 = 1;
@@ -49,43 +51,47 @@ impl From<Dice> for RustDice {
     }
 }
 
-#[repr(C)]
-#[derive(Debug, Clone)]
-pub struct BearOff {
-    from: Position,
+mod sm {
+    use super::Position;
+
+    #[repr(C)]
+    #[derive(Debug, Clone)]
+    pub struct BearOff {
+        pub from: Position,
+    }
+
+    #[repr(C)]
+    #[derive(Debug, Clone)]
+    pub struct Enter {
+        pub to: Position,
+    }
+
+    #[repr(C)]
+    #[derive(Debug, Clone)]
+    pub struct Move {
+        pub from: Position,
+        pub to: Position,
+    }
 }
 
 #[repr(C)]
 #[derive(Debug, Clone)]
-pub struct Enter {
-    to: Position,
-}
-
-#[repr(C)]
-#[derive(Debug, Clone)]
-pub struct Move {
-    from: Position,
-    to: Position,
-}
-
-#[repr(C)]
-#[derive(Debug, Clone)]
-/// `Box<T> is required here because we can't pass structs by-value to Haskell`
+/// `Box<T>` is required here because we can't pass structs by-value to Haskell
 pub enum RustSubmove {
-    BearOff(Box<BearOff>),
-    Enter(Box<Enter>),
-    Move(Box<Move>),
+    BearOff(Box<sm::BearOff>),
+    Enter(Box<sm::Enter>),
+    Move(Box<sm::Move>),
 }
 
 impl From<Submove> for RustSubmove {
     fn from(submove: Submove) -> Self {
         match submove {
             Submove::BearOff { from } =>
-                RustSubmove::BearOff(Box::new(BearOff { from })),
+                RustSubmove::BearOff(Box::new(sm::BearOff { from })),
             Submove::Enter { to } =>
-                RustSubmove::Enter(Box::new(Enter { to })),
+                RustSubmove::Enter(Box::new(sm::Enter { to })),
             Submove::Move { from, to } =>
-                RustSubmove::Move(Box::new(Move { from, to })),
+                RustSubmove::Move(Box::new(sm::Move { from, to })),
         }
     }
 }
@@ -142,6 +148,35 @@ impl From<Board> for RustBoard {
     }
 }
 
+#[derive(Debug)]
+#[repr(C)]
+pub struct RustMove {
+    submoves: [*const c_void ; 4],
+}
+
+/// We can be sure that a validated move has 4 or fewer submoves
+impl From<Move> for RustMove {
+    fn from(m: Move) -> Self {
+        let length = m.submoves.len();
+        RustMove {
+            submoves: {
+                let m = m.submoves
+                    .clone()
+                    .into_iter()
+                    .map(|x| Box::new(RustSubmove::from(x)))
+                    .collect::<Vec<Box<RustSubmove>>>();
+                let mut m = m.into_iter().map(|x| Box::into_raw(x) as *const c_void).collect::<ArrayVec<_>>();
+                // Fill remaining entries with a null pointer
+                for _ in 0..(4 - length) {
+                    m.push(std::ptr::null())
+                }
+                let m = m.into_inner().unwrap();
+                m
+            },
+        }
+    }
+}
+
 #[no_mangle]
 pub extern fn test_dice() -> Box<RustDice> {
     Box::new(RustDice::from((2, 6)))
@@ -187,4 +222,13 @@ pub extern fn test_submove_enter() -> Box<RustSubmove> {
 #[no_mangle]
 pub extern fn test_submove_move() -> Box<RustSubmove> {
     Box::new(RustSubmove::from(Submove::Move { from: 1, to: 2 }))
+}
+
+#[no_mangle]
+pub extern fn test_move() -> Box<RustMove> {
+    Box::new(RustMove::from(Move { submoves: vec![
+        Submove::Move { from: 1, to: 2 },
+        Submove::BearOff { from: 1 },
+        Submove::Enter { to: 1 },
+    ]}))
 }

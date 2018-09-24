@@ -66,10 +66,19 @@ spec = do
   describe "Submove" $ do
     it "can be marshalled from `Submove::BearOff`" $ do
       submove <- peekSubmove =<< test_submove_bear_off
-      submove `shouldBe` BearOff 1
+      submove `shouldBe` SubmoveBearOff 1
     it "can be marshalled from `Submove::Enter`" $ do
       submove <- peekSubmove =<< test_submove_enter
-      submove `shouldBe` Enter 1
+      submove `shouldBe` SubmoveEnter 1
     it "can be marshalled from `Submove::Move`" $ do
       submove <- peekSubmove =<< test_submove_move
-      submove `shouldBe` Move 1 2
+      submove `shouldBe` SubmoveMove 1 2
+
+  describe "Move" $ do
+    it "can be marshalled" $ do
+      move <- peekMove =<< test_move
+      move `shouldBe`
+        Move [ (SubmoveMove 1 2)
+             , (SubmoveBearOff 1)
+             , (SubmoveEnter 1)
+             ]
