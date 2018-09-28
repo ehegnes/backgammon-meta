@@ -15,50 +15,50 @@
 #define BOARD_SIZE 24
 
 typedef enum {
-    Black,
-    White,
+	Black,
+	White,
 } RustPlayer;
 
 typedef uint8_t Die;
 
 typedef struct {
-    Die d1;
-    Die d2;
+	Die d1;
+	Die d2;
 } RustDice;
 
 typedef enum {
-    BearOff,
-    Enter,
-    Move,
+	BearOff,
+	Enter,
+	Move,
 } RustSubmoveTag;
 
 typedef struct {
-    size_t to;
+	size_t to;
 } RustSubmoveEnter;
 
 typedef struct {
-    size_t from;
-    size_t to;
+	size_t from;
+	size_t to;
 } RustSubmoveMove;
 
 typedef struct {
-    size_t from;
+	size_t from;
 } RustSubmoveBearOff;
 
 typedef union {
-    RustSubmoveBearOff BearOff;
-    RustSubmoveEnter Enter;
-    RustSubmoveMove Move;
+	RustSubmoveBearOff BearOff;
+	RustSubmoveEnter Enter;
+	RustSubmoveMove Move;
 } RustSubmovePayload;
 
 typedef struct {
-    RustSubmoveTag tag;
-    RustSubmovePayload *payload;
+	RustSubmoveTag tag;
+	RustSubmovePayload *payload;
 } RustSubmove;
 
 typedef struct {
-    RustPlayer owner;
-    uint8_t count;
+	RustPlayer owner;
+	uint8_t count;
 } RustPoint;
 
 typedef RustPoint *RustMaybePoint;
@@ -66,19 +66,19 @@ typedef RustPoint *RustMaybePoint;
 typedef RustMaybePoint **RustInternalBoard;
 
 typedef struct {
-    RustInternalBoard board;
-    uint8_t bar_black;
-    uint8_t bar_white;
+	RustInternalBoard board;
+	uint8_t bar_black;
+	uint8_t bar_white;
 } RustBoard;
 
 typedef struct {
-    RustSubmove **submoves;
+	RustSubmove **submoves;
 } RustMove;
 
 typedef struct {
-    RustBoard *board;
-    RustDice *dice;
-    RustPlayer *turn;
+	RustBoard *board;
+	RustDice *dice;
+	RustPlayer *turn;
 } RustGame;
 
 RustMaybePoint test_some_point(void);
