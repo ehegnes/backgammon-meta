@@ -11,7 +11,7 @@ import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Marshal.Array
 import Foreign.Ptr (Ptr, castPtr, nullPtr)
 import Foreign.Storable
-import Control.Monad (liftM)
+import Control.Monad (liftM, join)
 import GHC.Generics
 
 {#enum define Player
@@ -37,19 +37,19 @@ peekPlayer = peek
 type Die = {#type Die #}
 
 data Dice = Dice (Die, Die)
-  deriving (Eq, Show, Typeable)
+  deriving (Eq, Show, Typeable, Generic)
 
 instance Storable Dice where
   sizeOf _ = {#sizeof RustDice #}
   alignment _ = {#alignof RustDice #}
   peek p = do
-    d1 <- {#get RustDice->d1 #} p
-    d2 <- {#get RustDice->d2 #} p
-    return $ Dice (fromIntegral d1 :: Die, fromIntegral d2 :: Die)
+    d1 <- {#get RustDice.d1 #} p
+    d2 <- {#get RustDice.d2 #} p
+    return $ Dice (d1, d2)
   poke = undefined
 
 peekDice :: Ptr Dice -> IO Dice
-peekDice = peek
+peekDice = peek . castPtr
 
 data Point = Point
   { owner :: Player
@@ -68,17 +68,13 @@ instance Storable Point where
 
 peekPoint :: Ptr Point -> IO Point
 peekPoint = peek . castPtr
---peekPoint p = do
---  owner <- {#get RustPoint->owner #} p
---  count <- {#get RustPoint->count #} p
---  return $ Point (cToEnum owner) (fromIntegral count)
 
 {#pointer *RustPoint as MaybePoint -> Point #}
 peekMaybePoint :: MaybePoint -> IO (Maybe Point)
 peekMaybePoint = maybePeek peekPoint
 
 data Board = Board
-  { board :: [Maybe Point]
+  { _board :: [Maybe Point]
   , barBlack :: Int
   , barWhite :: Int
   } deriving (Eq, Show, Typeable, Generic)
@@ -88,10 +84,10 @@ instance Storable Board where
   alignment _ = {#alignof RustBoard #}
   peek p = do
     maybePoints <- peekArray 24 $ castPtr p
-    board <- sequence (peekMaybePoint <$> maybePoints)
+    _board <- sequence (peekMaybePoint <$> maybePoints)
     barBlack <- fromIntegral <$> {#get RustBoard->bar_black #} p
     barWhite <- fromIntegral <$> {#get RustBoard->bar_white #} p
-    return $ Board board barBlack barWhite
+    return $ Board _board barBlack barWhite
   poke = undefined
 
 peekBoard :: Ptr Board -> IO Board
@@ -145,3 +141,22 @@ instance Storable Move where
 
 peekMove :: Ptr Move -> IO Move
 peekMove = peek . castPtr
+
+data Game = Game
+  { board :: Board
+  , dice :: Dice
+  , turn :: Player
+} deriving (Eq, Show, Typeable, Generic)
+
+instance Storable Game where
+  sizeOf _ = {#sizeof RustGame #}
+  alignment _ = {#alignof RustGame #}
+  peek p = do
+    board <- peekBoard . castPtr =<< {#get RustGame->board #} p
+    dice <- peekDice . castPtr =<< {#get RustGame->dice #} p
+    turn <- peekPlayer . castPtr =<< {#get RustGame->turn #} p
+    return $ Game board dice turn
+  poke = undefined
+
+peekGame :: Ptr Game -> IO Game
+peekGame = peek . castPtr

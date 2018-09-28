@@ -38,7 +38,7 @@ spec = do
   describe "Dice" $ do
     it "can be marshalled" $ do
       dice <- peekDice =<< test_dice
-      dice `shouldBe` Dice (2, 6)
+      dice `shouldBe` Dice (1, 2)
 
   describe "Player" $ do
     it "can be marshalled" $ do
@@ -82,3 +82,8 @@ spec = do
              , (SubmoveBearOff 1)
              , (SubmoveEnter 1)
              ]
+
+  describe "Game" $ do
+    it "can be marshalled" $ do
+      game <- peekGame =<< test_game
+      game `shouldBe` Game initial_board (Dice (0, 0)) White

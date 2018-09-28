@@ -75,6 +75,12 @@ typedef struct {
     RustSubmove **submoves;
 } RustMove;
 
+typedef struct {
+    RustBoard *board;
+    RustDice *dice;
+    RustPlayer *turn;
+} RustGame;
+
 RustMaybePoint test_some_point(void);
 RustMaybePoint test_none_point(void);
 RustPlayer *test_player(void);
@@ -84,5 +90,6 @@ RustSubmove *test_submove_bear_off(void);
 RustSubmove *test_submove_enter(void);
 RustSubmove *test_submove_move(void);
 RustMove *test_move(void);
+RustGame *test_game(void);
 
 #endif /* BACKGAMMON_LOGIC_H */

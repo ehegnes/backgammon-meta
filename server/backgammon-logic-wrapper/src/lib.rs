@@ -3,7 +3,7 @@ extern crate backgammon_logic;
 extern crate arrayvec;
 
 use backgammon_logic::player::Player;
-use backgammon_logic::game::{Dice};
+use backgammon_logic::game::{Game, Dice};
 use backgammon_logic::board::{Board, INITIAL_BOARD, Point, MaybePoint};
 use backgammon_logic::moves::{Move, Submove};
 
@@ -177,9 +177,26 @@ impl From<Move> for RustMove {
     }
 }
 
+#[repr(C)]
+pub struct RustGame {
+    board: Box<RustBoard>,
+    dice: Box<RustDice>,
+    turn: Box<RustPlayer>,
+}
+
+impl From<Game> for RustGame {
+    fn from(g: Game) -> Self {
+        RustGame {
+            board: Box::new(RustBoard::from(g.board)),
+            dice: Box::new(RustDice::from(g.dice)),
+            turn: Box::new(RustPlayer::from(g.turn)),
+        }
+    }
+}
+
 #[no_mangle]
 pub extern fn test_dice() -> Box<RustDice> {
-    Box::new(RustDice::from((2, 6)))
+    Box::new(RustDice::from((1, 2)))
 }
 
 #[no_mangle]
@@ -231,4 +248,9 @@ pub extern fn test_move() -> Box<RustMove> {
         Submove::BearOff { from: 1 },
         Submove::Enter { to: 1 },
     ]}))
+}
+
+#[no_mangle]
+pub extern fn test_game() -> Box<RustGame> {
+    Box::new(RustGame::from(Game::init()))
 }
