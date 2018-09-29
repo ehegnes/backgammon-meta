@@ -14,6 +14,8 @@ import Foreign.Storable
 import Control.Monad (liftM, join)
 import GHC.Generics
 
+{#typedef uint8_t Int #}
+
 {#enum define Player
   { PLAYER_BLACK as Black
   , PLAYER_WHITE as White
@@ -34,17 +36,15 @@ cFromEnum = fromIntegral . fromEnum
 peekPlayer :: Ptr Player -> IO Player
 peekPlayer = peek
 
-type Die = {#type Die #}
-
-data Dice = Dice (Die, Die)
+data Dice = Dice (Int, Int)
   deriving (Eq, Show, Typeable, Generic)
 
 instance Storable Dice where
   sizeOf _ = {#sizeof RustDice #}
   alignment _ = {#alignof RustDice #}
   peek p = do
-    d1 <- {#get RustDice.d1 #} p
-    d2 <- {#get RustDice.d2 #} p
+    d1 <- liftM fromIntegral $ {#get RustDice.d1 #} p
+    d2 <- liftM fromIntegral $ {#get RustDice.d2 #} p
     return $ Dice (d1, d2)
   poke = undefined
 

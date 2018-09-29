@@ -12,6 +12,8 @@ deriveBoth defaultOptions ''Player
 deriveBoth defaultOptions ''Point
 deriveBoth defaultOptions ''Submove
 deriveBoth defaultOptions ''Move
+deriveBoth defaultOptions ''Dice
+deriveBoth defaultOptions ''Game
 
 main :: IO ()
 main =
@@ -22,4 +24,6 @@ main =
     , DefineElm (Proxy :: Proxy Board)
     , DefineElm (Proxy :: Proxy Submove)
     , DefineElm (Proxy :: Proxy Move)
+    , DefineElm (Proxy :: Proxy Dice)
+    , DefineElm (Proxy :: Proxy Game)
     ]

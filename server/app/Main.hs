@@ -20,6 +20,8 @@ deriving instance ToJSON Player
 deriving instance ToJSON Point
 deriving instance ToJSON Submove
 deriving instance ToJSON Move
+deriving instance ToJSON Dice
+deriving instance ToJSON Game
 
 type BoardAPI = "board" :> Get '[JSON] Board
 

@@ -46,22 +46,22 @@ jsonEncPoint  val =
 
 
 type alias Board  =
-   { board: (List (Maybe Point))
+   { _board: (List (Maybe Point))
    , barBlack: Int
    , barWhite: Int
    }
 
 jsonDecBoard : Json.Decode.Decoder ( Board )
 jsonDecBoard =
-   ("board" := Json.Decode.list (Json.Decode.maybe (jsonDecPoint))) >>= \pboard ->
+   ("_board" := Json.Decode.list (Json.Decode.maybe (jsonDecPoint))) >>= \p_board ->
    ("barBlack" := Json.Decode.int) >>= \pbarBlack ->
    ("barWhite" := Json.Decode.int) >>= \pbarWhite ->
-   Json.Decode.succeed {board = pboard, barBlack = pbarBlack, barWhite = pbarWhite}
+   Json.Decode.succeed {_board = p_board, barBlack = pbarBlack, barWhite = pbarWhite}
 
 jsonEncBoard : Board -> Value
 jsonEncBoard  val =
    Json.Encode.object
-   [ ("board", (Json.Encode.list << List.map (maybeEncode (jsonEncPoint))) val.board)
+   [ ("_board", (Json.Encode.list << List.map (maybeEncode (jsonEncPoint))) val._board)
    , ("barBlack", Json.Encode.int val.barBlack)
    , ("barWhite", Json.Encode.int val.barWhite)
    ]
