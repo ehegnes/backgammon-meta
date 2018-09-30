@@ -104,3 +104,40 @@ jsonEncMove : Move -> Value
 jsonEncMove (Move v1) =
     (Json.Encode.list << List.map jsonEncSubmove) v1
 
+
+
+type Dice  =
+    Dice (Int, Int)
+
+jsonDecDice : Json.Decode.Decoder ( Dice )
+jsonDecDice =
+    Json.Decode.lazy (\_ -> Json.Decode.map Dice (Json.Decode.map2 (,) (Json.Decode.index 0 (Json.Decode.int)) (Json.Decode.index 1 (Json.Decode.int))))
+
+
+jsonEncDice : Dice -> Value
+jsonEncDice (Dice v1) =
+    (\(v1,v2) -> Json.Encode.list [(Json.Encode.int) v1,(Json.Encode.int) v2]) v1
+
+
+
+type alias Game  =
+   { board: Board
+   , dice: Dice
+   , turn: Player
+   }
+
+jsonDecGame : Json.Decode.Decoder ( Game )
+jsonDecGame =
+   ("board" := jsonDecBoard) >>= \pboard ->
+   ("dice" := jsonDecDice) >>= \pdice ->
+   ("turn" := jsonDecPlayer) >>= \pturn ->
+   Json.Decode.succeed {board = pboard, dice = pdice, turn = pturn}
+
+jsonEncGame : Game -> Value
+jsonEncGame  val =
+   Json.Encode.object
+   [ ("board", jsonEncBoard val.board)
+   , ("dice", jsonEncDice val.dice)
+   , ("turn", jsonEncPlayer val.turn)
+   ]
+

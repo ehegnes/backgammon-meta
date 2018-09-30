@@ -23,16 +23,27 @@ deriving instance ToJSON Move
 deriving instance ToJSON Dice
 deriving instance ToJSON Game
 
-type BoardAPI = "board" :> Get '[JSON] Board
+type GameAPI = Get '[JSON] Game
+type MoveAPI = Get '[JSON] Move
 
-server :: Server BoardAPI
-server = liftIO $ peekBoard =<< test_board
+type API = "game" :> GameAPI
+      :<|> "move" :> MoveAPI
 
-boardAPI :: Proxy BoardAPI
-boardAPI = Proxy
+gameServer :: Server GameAPI
+gameServer = liftIO $ peekGame =<< test_game
+
+moveServer :: Server MoveAPI
+moveServer = liftIO $ peekMove =<< test_move
+
+api :: Proxy API
+api = Proxy
+
+server :: Server API
+server = gameServer
+    :<|> moveServer
 
 app :: Application
-app = serve boardAPI server
+app = serve api server
 
 main :: IO ()
 main = do
